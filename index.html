@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<title>厦航乐活挑战</title>
+	<link rel="stylesheet" href="./css/style.css" />
+	<!-- <link rel="stylesheet/less" type="text/css" href="css/style.less" />
+		<script src="./js/less.min.js"></script> -->
+	<script src="./js/pace.js"></script>
+	<script src="./js/jquery-3.1.1.min.js"></script>
+	<script src="./js/vue.min.js"></script>
+	<script src="./js/swiper.min.js"></script>
+	<script src="./js/global.js"></script>
+	<script src="./js/jcanvas.js"></script>
+	<script src="./js/inobounce.min.js"></script>
+	<style>
+		.pop {
+			display: none;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="app">
+		<!-- 首页 -->
+		<div class="page" :class="{'show' : showPage('home')}">
+			<div class="page-inner">
+				<div class="home">
+					<div class="pace-border-right"></div>
+					<div class="pace-border-bottom"></div>
+					<div class="pace-border-left"></div>
+					<div class="pace-border-top"></div>
+					<div class="home-content">
+						<div class="home-content-menu">
+							<pub-btn class="home-content-menu-myprize" img-src="./images/home-9.png"
+								@btn-click="pops.myprize=true" />
+							</pub-btn>
+							<pub-btn class="home-content-menu-rules" img-src="./images/home-8.png"
+								@btn-click="pops.rules=true" />
+							</pub-btn>
+						</div>
+						<div class="home-content-title">
+							<img class="home-content-title-img" src="./images/home-11.png" alt="">
+							<span class="home-content-title-star"></span>
+						</div>
+						<div class="home-content-main">
+							<img class="home-content-role" src="./images/home-10.png" alt="">
+							<pub-btn class="home-content-start" img-src="./images/home-2.png"
+								@btn-click="handelStartTo">
+							</pub-btn>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 第一关 -->
+		<div class="page" :class="{'show' : showPage('firstLevel')}">
+			<div class="page-inner">
+				<div class="first-level">
+					<div class="first-level-content">
+						<img class="first-level-content-bc" src="./images/game1-bc.png" alt="">
+						<img class="first-level-content-tit" src="./images/game1-tit.png" alt="">
+						<div class="first-level-content-time">
+							<span></span>
+							<p>{{currentLevel.list[currentLevel.index].time[0]+':'+currentLevel.list[currentLevel.index].time[1]}}
+							</p>
+						</div>
+						<img class="first-level-content-role" :src="oneRoleSrc" alt="">
+						<div class="first-level-content-maskbox"></div>
+						<img class="first-level-content-mask" :class="oneRoleEnd?'first-level-content-mask-act':''"
+							src="./images/game1-mask.png" alt="">
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 第二关 -->
+		<div class="page" :class="{'show' : showPage('twoLevel')}">
+			<div class="page-inner">
+				<div class="two-level">
+					<div class="two-level-content">
+						<div class="two-level-content-top">
+							<img class="two-level-content-top-bc" src="./images/game2-bc3.png" alt="">
+							<div class="two-level-content-top-fly"></div>
+						</div>
+						<img class="two-level-content-bc" src="./images/game2-bc-1.png" alt="">
+						<img class="two-level-content-tit" src="./images/game2-tit.png" alt="">
+						<div class="two-level-content-time">
+							<span></span>
+							<p>{{currentLevel.list[currentLevel.index].time[0]+':'+currentLevel.list[currentLevel.index].time[1]}}
+							</p>
+						</div>
+						<img class="two-level-content-role" :src="twoRoleSrc" alt="">
+						<div class="two-level-content-lefttip"
+							:class="twoShowTips&&twoRoleJumps.list[twoRoleJumps.index]===0?'two-level-content-lefttip-act':''">
+						</div>
+						<div class="two-level-content-righttip"
+							:class="twoShowTips&&twoRoleJumps.list[twoRoleJumps.index]===1?'two-level-content-righttip-act':''">
+							></div>
+					</div>
+					<div class="two-level-bottom">
+						<img class="two-level-bottom-bg" src="./images/game2-bc2.png" alt="">
+						<pub-btn class="two-level-bottom-left" img-src="./images/game2-btn1.png"
+							@btn-click="handelLeftJump">
+						</pub-btn>
+						<pub-btn class="two-level-bottom-right" img-src="./images/game2-btn2.png"
+							@btn-click="handelRightJump">
+						</pub-btn>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 第三关 -->
+		<div class="page" :class="{'show' : showPage('threeLevel')}">
+			<div class="page-inner">
+				<div class="three-level">
+					<div class="three-level-content">
+						<img class="three-level-content-bc" src="./images/game3-bc.png" alt="">
+						<img class="three-level-content-tit" src="./images/game3-tit.png" alt="">
+						<div class="three-level-content-time">
+							<span></span>
+							<p>{{currentLevel.list[currentLevel.index].time[0]+':'+currentLevel.list[currentLevel.index].time[1]}}
+							</p>
+						</div>
+					</div>
+					<div class="three-level-bottom">
+						<img class="three-level-bottom-bg" src="./images/game3-bc2.png" alt="">
+						<div class="three-level-bottom-box" @touchstart="handlerTouchstart"
+							@touchmove="handlerTouchmove" @touchend="handlerTouchend"></div>
+						<div class="three-level-bottom-meun">
+							<ul>
+								<li v-for="(item,index) in foodInfo" :class="item.count>=3?'over':''">
+									<img :src="item.src" alt="">
+									<span>{{item.count}}</span>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 第四关 -->
+		<div class="page" :class="{'show' : showPage('fourLevel')}">
+			<div class="page-inner">
+				<div class="four-level">
+					<img class="four-level-tit" src="./images/game3-tit.png" alt="">
+					<div class="four-level-time">
+						<span></span>
+						<p>{{currentLevel.list[currentLevel.index].time[0]+':'+currentLevel.list[currentLevel.index].time[1]}}
+						</p>
+					</div>
+					<div class="four-level-pop"></div>
+					<div class="four-level-content">
+						<img class="four-level-content-bc" src="./images/game4-3.png" alt="">
+						<div class="four-level-content-roles"></div>
+						<img class="four-level-content-door" src="./images/game4-5.png" alt="">
+						<div id="test"></div>
+						<div class="four-level-content-shadow" @touchstart="handlerTouchstartBall"
+							@touchmove="handlerTouchmoveBall" @touchend="handlerTouchendBall">
+							<div class="four-level-content-shadow-box"></div>
+							<div class="four-level-content-shadow-ball">
+								<div class="four-level-content-shadow-ball-line">
+									<div class="four-level-content-shadow-end"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 海报页 -->
+		<div class="page" :class="{'show' : showPage('poster')}">
+			<div class="page-inner">
+				<div class="poster">
+					<div class="poster-main">
+						<div class="poster-main-bg">
+							<img src="./images/poster-main-1.png" alt="">
+							<p class="poster-main-bg-name">买买买买卖</p>
+							<p class="poster-main-bg-time">{{totalTime[0]+'分'+totalTime[1]+'秒'}}</p>
+							<p class="poster-main-bg-index">第1,888个</p>
+							<p class="poster-main-bg-tip">乐活达人!</p>
+							<img style="opacity: 0 !important;visibility: hidden;" class="poster-main-bg-poster"
+								:src="posterUrl" alt="">
+						</div>
+						<div class="poster-main-content">
+							<p>长按海报保存至相册</p>
+							<div class="poster-main-btns">
+								<pub-btn img-src="./images/poster-btn1.png" @btn-click="pops.share=true"></pub-btn>
+								<pub-btn img-src="./images/poster-btn2.png" @btn-click="pops.winning=true"></pub-btn>
+							</div>
+							<p>下滑查看更多焕新精彩内容!</p>
+							<span class="poster-main-icon"></span>
+						</div>
+					</div>
+					<ul class="poster-list">
+						<li>
+							<img src="./images/poster-icon1.png" alt="">
+							<p>焕新生活 焕“新”升级</p>
+							<pub-btn img-src="./images/poster-icon5.png"
+								@btn-click="handelRouteTo('https://www.baidu.com/')"></pub-btn>
+						</li>
+						<li class="poster-list-right">
+							<img src="./images/poster-icon2.png" alt="">
+							<p>观看乐活定律视频</p>
+							<pub-btn img-src="./images/poster-icon5.png"
+								@btn-click="handelRouteTo('https://www.baidu.com/')"></pub-btn>
+						</li>
+						<li>
+							<img src="./images/poster-icon3.png" alt="">
+							<p>了解更多新鲜资讯</p>
+							<pub-btn img-src="./images/poster-icon5.png"
+								@btn-click="handelRouteTo('https://www.baidu.com/')"></pub-btn>
+						</li>
+						<li class="poster-list-right">
+							<img src="./images/poster-icon4.png" alt="">
+							<p>待补充......</p>
+							<pub-btn img-src="./images/poster-icon5.png"
+								@btn-click="handelRouteTo('https://www.baidu.com/')"></pub-btn>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<!-- -----------------------------弹窗------------------------ -->
+		<!-- 规则 -->
+		<pub-pop :show-pop="pops.rules" :show-close="false" class="normal pop-rules">
+			<div class="pop-bd">
+				<scroll self-name="rules" :full="true">
+					<img v-if="rules.isImg" :src="rules.imgsrc" alt="" />
+					<p v-else v-for="i in 50" :key="i">
+						{{i}}活动活动规则活动规则活动规则活活动规则动规则规则
+					</p>
+				</scroll>
+			</div>
+			<div class="pop-ft">
+				<pub-btn img-src="./images/rules-btn.png" @btn-click="pops.rules=false">
+			</div>
+		</pub-pop>
+		<!-- 关注 -->
+		<pub-pop :show-pop="pops.onfocus" :show-close="false" class="normal pop-onfocus">
+			<div class="pop-bd">
+				<img src="./images/onfocus-bc.png" alt="" />
+				<img class="code" :src="codeSrc" alt="" />
+			</div>
+			<div class="pop-ft">
+				<pub-btn img-src="./images/onfocus-btn.png" @btn-click="pops.onfocus=false">
+			</div>
+		</pub-pop>
+		<!-- 我的奖品-->
+		<pub-pop :show-pop="pops.myprize" :show-close="false" class="normal pop-myprize">
+			<div class="pop-bd">
+				<div class="main">
+					<ul v-if="myprize.length!=0">
+						<li v-for="i in myprize" :key="i.id">
+							<div class="l" :class="i.linehight?'act':''">
+								<p>{{i.tit}}</p>
+							</div>
+							<div v-show="i.isEdit" class="r" @click="handelEditPrize(i.id)">
+								编辑
+							</div>
+						</li>
+					</ul>
+					<img style="background-color: #fff;padding: .2rem;border-radius: .2rem;" v-else
+						src="./images/empty.png" alt="" />
+					<pub-btn img-src="./images/myprize-btn.png" @btn-click="pops.myprize=false"></pub-btn>
+				</div>
+			</div>
+		</pub-pop>
+		<!--中奖-->
+		<pub-pop :show-pop="pops.winning" :show-close="false" class="normal pop-winning">
+			<div class="pop-hd">
+				<img src="./images/prize-bc-tit.png" alt="">
+				<span></span>
+			</div>
+			<div class="pop-bd">
+				<div class="main">
+					<p class="title">{{prize.list[prize.cur].tit}}</p>
+					<img class="prize" :src="prize.list[prize.cur].img" alt="" />
+					<div class="form">
+						<input v-if="prize.list[prize.cur].username" type="text" v-model.trim="userInfo.username"
+							placeholder="请填写您的姓名" name="name" id="name" />
+						<input v-if="prize.list[prize.cur].idcard" type="text" v-model.trim="userInfo.idcard"
+							placeholder="请填写您的白鹭会员/证件号" name="idcard" id="idcard" />
+						<input v-if="prize.list[prize.cur].phone" type="text" v-model.trim="userInfo.phone"
+							placeholder="请填写您的手机号" name="phone" id="phone" />
+					</div>
+					<p class="tips">{{prize.list[prize.cur].tip}}</p>
+				</div>
+				<div class="operation">
+					<pub-btn class="btn2" v-if="prize.list[prize.cur].username" img-src="./images/prize-btn-2.png"
+						@btn-click="handelSubmitUserInfo"></pub-btn>
+					<pub-btn v-else img-src="./images/prize-btn-1.png" @btn-click="pops.winning=false"></pub-btn>
+				</div>
+			</div>
+		</pub-pop>
+		<!-- 未中奖 -->
+		<pub-pop :show-pop="pops.nowinning" :show-close="false" class="normal pop-nowinning">
+			<div class="pop-bd">
+				<img src="./images/prize-bc2.png" alt="" />
+			</div>
+			<div class="pop-ft">
+				<pub-btn img-src="./images/onfocus-btn.png" @btn-click="pops.nowinning=false"></pub-btn>
+			</div>
+		</pub-pop>
+		<!-- 挑战成功 -->
+		<pub-pop :show-pop="pops.success" :show-close="false" class="normal pop-success">
+			<div class="pop-success-content">
+				<img class="pop-success-content-bc" src="./images/success-1.png" alt="">
+				<div class="pop-success-content-main">
+					<img class="pop-success-content-main-bc" src="./images/success-3.png" alt="">
+					<div class="pop-success-content-main-body">
+						<p class="tit">第{{currentLevel.list[currentLevel.index].level}}关用时</p>
+						<div class="time">
+							<span>{{currentLevel.list[currentLevel.index].time[0]}}</span><strong>:</strong><span>{{currentLevel.list[currentLevel.index].time[1]}}</span>
+						</div>
+						<p class="tit totle-time">通关总用时{{totalTime[0]+':'+totalTime[1]}} </p>
+						<span class="icon-tip"></span>
+						<p class="tip" v-html="currentLevel.list[currentLevel.index].successTip"></p>
+					</div>
+					<pub-btn v-if="currentLevel.index!=2" img-src="./images/success-2.png" @btn-click="handelContinue">
+					</pub-btn>
+					<pub-btn v-else img-src="./images/success-2-1.png" @btn-click="handelToScore"></pub-btn>
+				</div>
+			</div>
+		</pub-pop>
+		<!-- 分享 -->
+		<pub-pop @pop-handel="pops.share=false" :show-pop="pops.share" :show-close="false" class="normal pop-share">
+			<img src="./images/share.png" alt="">
+		</pub-pop>
+		<!-- 开局提示 -->
+		<pub-pop @pop-handel="handerHideTip" :show-pop="pops.tip" :show-close="false" class="normal pop-tip">
+			<img :src="tipSrc" alt="">
+		</pub-pop>
+	</div>
+	<canvas width="750" height="1334" id="myCanvas" style="display: none"></canvas>
+	<audio preload class="actionAudioSrc"></audio>
+	<audio preload loop class="actionAudioSrc2"></audio>
+	<audio preload loop class="actionAudioSrcGlobal"></audio>
+	<script src="https://cdn.bootcdn.net/ajax/libs/vConsole/3.3.4/vconsole.min.js"></script>
+	<script type="text/javascript">
+		let vConsole = new VConsole();
+	</script>
+	<script>
+		var vm = new Vue({
+			el: "#app",
+			data: {
+				activePage: "firstLevel", //当前显示页面
+				rules: { // 活动规则info
+					isImg: false,
+					imgsrc: "",
+					text: "",
+				},
+				audioSrc: {
+					twoLevelAction: './audio/game-2.mp3',
+					twoLevelBg: './audio/game-2-bg.mp3',
+					globalLevelBg: './audio/game-bg.mp3',
+					fourLevelBg: './audio/game4-bc.mp3',
+				},
+				codeSrc: "", //关注弹窗的二维码
+				pops: {
+					rules: false, //活动规则
+					onfocus: false, //关注
+					myprize: false, //我的奖品
+					winning: false, //中奖
+					nowinning: false, //未中奖
+					success: false, // 挑战成功
+					share: false, // 分享
+					tip: false, //关卡前提示
+				},
+				posterUrl: '',
+				myprize: [], //我的奖品
+				prize: {
+					//所有中奖奖品
+					cur: 0, //中奖项
+					list: [{
+						id: 1,
+						tit: "20元机票优惠券",
+						img: "./images/prize-item1.png",
+						tip: "奖品说明：您的优惠券已直接到账。您可以到厦航集团商城查看票券情况。  ",
+						dateinfo: "2022.07.08",
+						btntext: "确认",
+						username: false,
+						idcard: false,
+						phone: false,
+						isEdit: true,
+					},
+					{
+						id: 2,
+						tit: "10白鹭积分 ",
+						img: "./images/prize-item2.png",
+						tip: "奖品说明：小字小字小字小字小字小字小字小字小字小字。 ",
+						dateinfo: "2022.07.08",
+						btntext: "确认无误并提交",
+						username: true,
+						idcard: true,
+						phone: true,
+						isEdit: true,
+					},
+					],
+				},
+				userInfo: {
+					username: "",
+					phone: "",
+					idcard: "",
+				},
+				tipSrc: '',
+				currentLevel: {
+					index: 1,
+					list: [{
+						successTip: '防疫千万条，戴好口罩第一条！<br />个人防护，从小事做起！',
+						time: ['00', '00'],
+						level: '一'
+					},
+					{
+						successTip: '运动一定要适度适量，可别超负荷哦！<br />同时保持良好的心态也很重要！',
+						time: ['00', '00'],
+						level: '二'
+					},
+					{
+						successTip: '根据下方指引，左右移动环保袋承接对应数量的食材，协助我完成健康餐吧！',
+						time: ['00', '00'],
+						level: '三'
+					},
+					]
+				},
+				oneRoleSrc: './images/game1-role1.png',
+				oneRoleEnd: false,
+				twoRoleSrc: './images/game2-role0-1.png',
+				twoRoleChange: false,
+				twoRoleJumps: {
+					index: 0,
+					// 0：左，1：右
+					list: [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0]
+				},
+				twoShowTips: true,
+				threeRoleEnd: false,
+				foodInfo: [{
+					info: '面包',
+					src: "./images/game3-menuitem1.png",
+					count: 0
+				},
+				{
+					info: '西兰花',
+					src: "./images/game3-menuitem2.png",
+					count: 0
+				},
+				{
+					info: '牛奶',
+					src: "./images/game3-menuitem3.png",
+					count: 0
+				},
+				{
+					info: '西瓜',
+					src: "./images/game3-menuitem4.png",
+					count: 0
+				},
+				{
+					info: '鱼',
+					src: "./images/game3-menuitem5.png",
+					count: 0
+				},
+				{
+					info: '苹果',
+					src: "./images/game3-menuitem6.png",
+					count: 0
+				},
+				],
+				levelTimer: '',
+			},
+			computed: {
+				totalTime() {
+					let totalMinute = 0
+					let totalSecond = 0
+					this.currentLevel.list.forEach(item => {
+						let [minute, second] = item.time
+						minute = Number(minute)
+						second = Number(second)
+						totalMinute += minute
+						totalSecond += second
+					})
+					totalMinute += parseInt(totalSecond / 60)
+					totalSecond = totalSecond % 60
+					return [
+						totalMinute < 10 ? '0' + totalMinute : totalMinute,
+						totalSecond < 10 ? '0' + totalSecond : totalSecond
+					]
+				}
+			},
+			mounted() {
+				this.myprize = this.prize.list; //假数据，我的奖品
+
+				// 提前加载
+				['./images/game2-role0-1.png',
+					'./images/game2-role0-2.png',
+					'./images/game2-role0-3.png',
+					'./images/game2-role0-4.png',
+					'./images/game4-1-1.png',
+				].forEach(imgPath => {
+					var image = new Image();
+					image.onload = function (e) {
+						console.log(this.src)
+					}
+					image.src = imgPath;
+				})
+				this.palyBgm();
+				document.addEventListener("WeixinJSBridgeReady", () => {
+					this.palyBgm();
+				}, false);
+
+				//运动事件监听
+				if (window.DeviceMotionEvent) {
+					window.addEventListener('devicemotion', deviceMotionHandler, false);
+				}
+				//获取加速度信息
+				//通过监听上一步获取到的x, y, z 值在一定时间范围内的变化率，进行设备是否有进行晃动的判断。
+				//而为了防止正常移动的误判，需要给该变化率设置一个合适的临界值。
+				var SHAKE_THRESHOLD = 20000;
+				var last_update = 0;
+				var x, y, z, last_x = 0,
+					last_y = 0,
+					last_z = 0;
+				var mathNum, mathTxt;
+
+				function deviceMotionHandler(eventData) {
+					var acceleration = eventData.accelerationIncludingGravity;
+					var curTime = new Date().getTime();
+					if ((curTime - last_update) > 20) {
+						var diffTime = curTime - last_update;
+						last_update = curTime;
+						x = acceleration.x;
+						y = acceleration.y;
+						z = acceleration.z;
+						var speed = Math.abs(x + y + z - last_x - last_y - last_z) / diffTime * 10000;
+						if (speed > SHAKE_THRESHOLD) {
+							shake();
+							// palyAudio();
+						}
+						last_x = x;
+						last_y = y;
+						last_z = z;
+					}
+				}
+
+				function shake() {
+					// palyAudio();
+					// 生成随机数产生摇一摇场景
+					mathNum = (Math.round(Math.random() * 5) + 1) * 1000;
+					mathTxt = (Math.round(Math.random() * shakeData.length) + 1);
+					console.log(mathNum)
+					$('.hand_img').addClass('shake_hand')
+					var shake = setTimeout(function () {
+						// stopAudio()
+						alert('ok')
+					}, mathNum)
+				}
+			},
+			methods: {
+				// 足球触摸事件
+				handlerTouchstartBall(e) {
+					ballX = e.targetTouches[0].pageX
+					$('.four-level-content-shadow').css({
+						transform: 'scale(.95)'
+					})
+					$('.four-level-pop').show()
+				},
+				handlerTouchmoveBall(e) {
+					let diffLeft = (e.targetTouches[0].pageX - ballX) / 5
+
+					if (diffLeft <= -17) {
+						diffLeft = -17
+					}
+					if (diffLeft >= 17) {
+						diffLeft = 17
+					}
+
+					$('.four-level-content-shadow-ball').css({
+						transform: `rotate(${diffLeft}deg)`
+					})
+				},
+				handlerTouchendBall(e) {
+					const endDom = document.querySelector('.four-level-content-shadow-end').getBoundingClientRect()
+
+					$('.four-level-pop').hide()
+					$('.four-level-content-shadow-ball-line').css({
+						visibility: 'hidden',
+					})
+					$('.four-level-content-shadow-box').css({
+						visibility: 'hidden',
+					})
+
+					$('.four-level-content-shadow').css({
+						transform: 'scale(1)'
+					})
+					const endXY = {
+						top: (endDom.top - ($('.four-level-content-shadow').height() / 2)),
+						left: endDom.left
+
+					}
+					document.querySelector('.four-level-content-shadow').style.setProperty('--balltop', endXY.top + 'px')
+					document.querySelector('.four-level-content-shadow').style.setProperty('--ballleft', endXY.left + 'px')
+					$('.four-level-content-shadow').addClass('act1')
+					this.checkBall()
+
+				},
+				checkBall() {
+					let succ = true
+					const time2 = setTimeout(() => {
+						clearInterval(time)
+						time = null
+						if (succ) {
+							console.log('进球成功');
+							$('.four-level-content-roles').addClass('roles-paused')
+							clearInterval(this.levelTimer)
+							this.levelTimer = null
+							console.log('关卡3完成')
+							setTimeout(() => {
+								if (!this.threeRoleEnd) {
+									this.pops.success = true
+								}
+								this.threeRoleEnd = true
+							}, 1000)
+						}
+					}, 2000) // 与act1 动画时间一致
+
+					let time = setInterval(() => {
+						const ball = document.querySelector('.four-level-content-shadow').getBoundingClientRect()
+						const roles = document.querySelector('.four-level-content-roles').getBoundingClientRect()
+
+						// 左右各缩小10px，更容易进球
+						if (ball.top > roles.top
+							&& ball.top < roles.top + roles.height
+							&& ball.left > roles.left + 10
+							&& ball.left < roles.left - 10 + roles.width) {
+
+							console.log('挡住了');
+
+							clearInterval(time)
+							clearTimeout(time2)
+
+							$('.four-level-content-roles').addClass('roles-paused roles-bc')
+							$('.four-level-content-shadow').hide()
+
+							// 1秒后重新进球。 复原足球，球员
+							setTimeout(() => {
+								$('.four-level-content-shadow').removeClass('act1')
+								$('.four-level-content-shadow').show()
+								$('.four-level-content-roles').removeClass('roles-paused roles-bc')
+
+								ballX = 0
+								$('.four-level-content-shadow-ball').css({
+									transform: `rotate(0deg)`
+								})
+								$('.four-level-content-shadow-ball-line').css({
+									visibility: 'visible',
+								})
+								$('.four-level-content-shadow-box').css({
+									visibility: 'visible',
+								})
+							}, 1000)
+
+						}
+					}, 10);
+				},
+				palyBgm() {
+					setTimeout(() => {
+						document.querySelector('.actionAudioSrcGlobal').src = this.audioSrc.globalLevelBg
+						document.querySelector('.actionAudioSrcGlobal').play()
+					}, 500);
+				},
+
+				handelRouteTo(url) {
+					window.location.href = url
+				},
+				//创建海报
+				createPoster() {
+					loadding('上传成绩中...')
+					let that = this;
+					downLoadImg("./images/poster-main.png", function () {
+						// $("#myCanvas").drawRect({
+						// 	fillStyle: "#4CC9FD",
+						// 	strokeWidth: 4,
+						// 	x: 0,
+						// 	y: 0,
+						// 	fromCenter: false,
+						// 	width: 750,
+						// 	height: 1334
+						// });
+						$("#myCanvas").drawImage({
+							source: "./images/poster-main.png",
+							x: 0,
+							y: 0,
+							width: 750,
+							height: 1334,
+							fromCenter: false,
+							load: function () {
+								$(this).drawText({
+									fillStyle: '#2DA6FF',
+									respectAlign: true,
+									align: 'left',
+									x: 260,
+									y: 213,
+									fontSize: 40,
+									fontStyle: 'bold',
+									fontFamily: 'Trebuchet MS, sans-serif',
+									text: `${that.totalTime[0]}分${that.totalTime[1]}秒`
+								});
+								$(this).drawText({
+									fillStyle: '#FDFD32',
+									respectAlign: true,
+									fontSize: 65,
+									fontStyle: 'bold',
+									strokeStyle: '#000',
+									strokeWidth: 3,
+									align: 'center',
+									x: 245,
+									y: 935,
+									fontFamily: 'Microsoft YaHei',
+									text: '第1,888个'
+								});
+								$(this).drawText({
+									fillStyle: '#FFFFFF',
+									respectAlign: true,
+									fontSize: 65,
+									fontStyle: 'bold',
+									strokeStyle: '#000',
+									strokeWidth: 3,
+									align: 'center',
+									x: 245,
+									y: 1115,
+									fontFamily: 'HYXiaoMaiTiJ',
+									text: '乐活达人!'
+								});
+								$(this).drawText({
+									fillStyle: '#FFFFFF',
+									respectAlign: true,
+									fontSize: 36,
+									fontStyle: 'bold',
+									strokeStyle: '#000',
+									strokeWidth: 1.5,
+									align: 'center',
+									x: 165,
+									y: 130,
+									fontFamily: 'HYXiaoMaiTiJ',
+									text: '你的昵称'
+								});
+								loadding(false);
+								let posterUrl = $("#myCanvas").getCanvasImage(
+									"jpeg",
+									0.8
+								);
+								that.posterUrl = posterUrl
+								that.pops.success = false
+								that.activePage = "poster"
+							},
+						});
+					});
+				},
+				handelToScore() {
+					console.log('查看成绩')
+					document.querySelector('.actionAudioSrc2').pause()
+					document.querySelector('.actionAudioSrcGlobal').play()
+					this.createPoster()
+				},
+				handelContinue() {
+					this.pops.success = false
+					if (this.currentLevel.index == 0) {
+						this.activePage = 'twoLevel'
+						this.currentLevel.index = 1;
+						this.tipSrc = './images/game2-tip.png';
+						this.pops.tip = true
+						return;
+					}
+					if (this.currentLevel.index == 1) {
+						this.activePage = 'fourLevel'
+						this.currentLevel.index = 2;
+						this.tipSrc = './images/game3-tip.png';
+						this.pops.tip = true
+						return;
+					}
+				},
+				handerHideTip() {
+					if (this.currentLevel.index == 0) {
+						console.log('开始关卡1')
+						this.initOrientation()
+					}
+					if (this.currentLevel.index == 1) {
+						console.log('开始关卡2')
+						// 切换音乐
+						document.querySelector('.actionAudioSrcGlobal').pause()
+						document.querySelector('.actionAudioSrc2').src = this.audioSrc.twoLevelBg
+						document.querySelector('.actionAudioSrc2').play()
+					}
+					if (this.currentLevel.index == 2) {
+						console.log('开始关卡3')
+						document.querySelector('.actionAudioSrcGlobal').pause()
+						document.querySelector('.actionAudioSrc2').src = this.audioSrc.fourLevelBg
+						document.querySelector('.actionAudioSrc2').play()
+					}
+					this.levelTimer = setInterval(() => {
+						let time = this.currentLevel.list[this.currentLevel.index].time
+						let [minute, second] = time
+						minute = Number(minute)
+						second = Number(second)
+						second++
+						if (second >= 60) {
+							second = 0
+							minute++
+						}
+						this.currentLevel.list[this.currentLevel.index].time = [(minute < 10 ? '0' +
+							minute : minute), (second < 10 ? '0' + second : second)]
+					}, 1000)
+					this.pops.tip = false
+				},
+				handelStartTo() {
+					this.activePage = 'firstLevel'
+					this.currentLevel.index = 0;
+					this.tipSrc = './images/game1-tip.png';
+					this.pops.tip = true
+					this.palyBgm();
+				},
+				initOrientation() {
+					// https 才有效果
+					window.addEventListener("deviceorientation", this.handelOrientationListener, false)
+				},
+				handelOrientationListener(e) {
+					setTimeout(() => {
+						this.handelOrientationMove(e);
+					}, 10);
+				},
+				handelOrientationMove(e) {
+					if (!e.gamma && !e.beta) {
+						e.gamma = e.x * (180 / Math.PI); //转换成角度值,
+						e.beta = e.y * (180 / Math.PI); //转换成角度值
+						e.alpha = e.z * (180 / Math.PI); //转换成角度值
+					}
+
+					var gamma = e.gamma;
+					var beta = e.beta;
+					var alpha = e.alpha;
+
+					if (e.accelerationIncludingGravity) {
+						gamma = e.accelerationIncludingGravity.x * 300;
+						beta = -e.accelerationIncludingGravity.y * 300;
+						alpha = event.accelerationIncludingGravity.z * 300;
+					}
+
+					if (this._lastGamma != gamma || this._lastBeta != beta) {
+						const moveScale = 700; // 移动速度倍数
+						let offsetX = (gamma / 90) * moveScale;
+						let offsetY = (beta / 90) * moveScale;
+						document.querySelector('.first-level-content-mask').style.transform = "translate3d(" +
+							offsetX + "px," + offsetY +
+							"px,0)"
+
+						// 口罩范围box
+						const boxBordeLeft = document.querySelector('.first-level-content-maskbox')
+							.getBoundingClientRect().left
+						const boxBordeTop = document.querySelector('.first-level-content-maskbox')
+							.getBoundingClientRect().top
+						const boxBordeRight = document.querySelector('.first-level-content-maskbox')
+							.getBoundingClientRect().left + document.querySelector('.first-level-content-maskbox')
+								.clientWidth
+						const boxBordeBottom = document.querySelector('.first-level-content-maskbox')
+							.getBoundingClientRect().top + document.querySelector('.first-level-content-maskbox')
+								.clientHeight
+
+						const markBordeLeft = document.querySelector('.first-level-content-mask')
+							.getBoundingClientRect().left
+						const markBordeTop = document.querySelector('.first-level-content-mask')
+							.getBoundingClientRect().top
+						const markBordeRight = document.querySelector('.first-level-content-mask')
+							.getBoundingClientRect().left + document.querySelector('.first-level-content-mask')
+								.clientWidth
+						const markBordeBottom = document.querySelector('.first-level-content-mask')
+							.getBoundingClientRect().top + document.querySelector('.first-level-content-mask')
+								.clientHeight
+						if (markBordeLeft > boxBordeLeft &&
+							markBordeRight < boxBordeRight &&
+							markBordeTop > boxBordeTop &&
+							markBordeBottom < boxBordeBottom) {
+							console.log('口罩进入范围')
+							window.removeEventListener("deviceorientation", this.handelOrientationListener, false)
+							//隐藏口罩
+							this.oneRoleEnd = true
+							// 戴口罩
+							let index = 0;
+							const timer = setInterval(() => {
+								index++;
+								if (index >= 6) {
+									clearInterval(timer)
+									// 清除时间
+									clearInterval(this.levelTimer)
+									this.levelTimer = null
+									setTimeout(() => { this.pops.success = true }, 300)
+									console.log('关卡1完成')
+								}
+								this.oneRoleSrc = `./images/game1-role${index}.png`
+							}, 300)
+						}
+						this._lastGamma = gamma;
+						this._lastBeta = beta;
+					}
+				},
+				handelLeftJump() {
+					console.log('结果=>', '左', this.twoRoleJumps.index);
+					if (this.twoRoleChange) return;
+
+					const direction = this.twoRoleJumps.list[this.twoRoleJumps.index]
+					if (direction === 0) {
+						this.handelJumpActionPlay('left')
+						this.twoRoleJumps.index++
+						this.twoShowTips = false
+						setTimeout(() => {
+							this.twoShowTips = true
+						}, 150)
+						if (this.twoRoleJumps.index >= this.twoRoleJumps.list.length) {
+							clearInterval(this.levelTimer)
+							document.querySelector('.actionAudioSrc2').pause()
+							document.querySelector('.actionAudioSrcGlobal').play()
+							this.levelTimer = null
+							this.pops.success = true
+							console.log('关卡2完成')
+						}
+					}
+				},
+				handelRightJump() {
+					console.log('结果=>', '右');
+					if (this.twoRoleChange) return;
+
+					const direction = this.twoRoleJumps.list[this.twoRoleJumps.index]
+					if (direction === 1) {
+						this.handelJumpActionPlay('right')
+						this.twoRoleJumps.index++
+						this.twoShowTips = false
+						setTimeout(() => {
+							this.twoShowTips = true
+						}, 150)
+						if (this.twoRoleJumps.index >= this.twoRoleJumps.list.length) {
+							clearInterval(this.levelTimer)
+							document.querySelector('.actionAudioSrc2').pause()
+							document.querySelector('.actionAudioSrcGlobal').play()
+							this.levelTimer = null
+							this.pops.success = true
+							console.log('关卡2完成')
+						}
+					}
+				},
+				handelJumpActionPlay(direction) {
+					this.twoRoleChange = true;
+					if (direction === 'right') {
+						this.twoRoleSrc = './images/game2-role0-2.png'
+						let timer1 = setTimeout(() => {
+							this.twoRoleSrc = './images/game2-role0-3.png'
+							let timer2 = setTimeout(() => {
+								this.twoRoleSrc = './images/game2-role0-4.png'
+								timer1 = null
+								timer2 = null
+								this.twoRoleChange = false;
+							}, 100)
+						}, 100)
+					}
+					if (direction === 'left') {
+						this.twoRoleSrc = './images/game2-role0-3.png'
+						let timer1 = setTimeout(() => {
+							this.twoRoleSrc = './images/game2-role0-2.png'
+							let timer2 = setTimeout(() => {
+								this.twoRoleSrc = './images/game2-role0-1.png'
+								timer1 = null
+								timer2 = null
+								this.twoRoleChange = false;
+							}, 100)
+						}, 100)
+					}
+				},
+				handlerTouchstart(event) {
+					let touch;
+					if (event.touches) {
+						touch = event.touches[0];
+					} else {
+						touch = event;
+					}
+					dx = touch.clientX - event.target.offsetLeft;
+					this.isTouch = true;
+				},
+				handlerTouchmove(event) {
+					if (!this.isTouch) return;
+					let touch;
+					if (event.touches) {
+						touch = event.touches[0];
+					} else {
+						touch = event;
+					}
+					let diffLeft = touch.clientX - dx;
+
+					if (diffLeft < event.target.clientWidth / 2) {
+						diffLeft = event.target.clientWidth / 2
+					}
+					if (diffLeft > (event.target.clientWidth / 2 + document.querySelector(".three-level")
+						.offsetWidth -
+						touch.target.clientWidth)) {
+						diffLeft = event.target.clientWidth / 2 + document.querySelector(".three-level")
+							.offsetWidth -
+							touch.target.clientWidth
+					}
+					document.querySelector(".three-level-bottom-box").style.left = diffLeft + "px";
+				},
+				handlerTouchend() {
+					this.isTouch = false;
+				},
+				//产生掉落物
+				createFood() {
+					var food = document.createElement("img");
+					food.className = "food";
+					const src = `./images/game3-item${Math.ceil(Math.random() * 8)}.png`
+					food.src = src;
+					document.querySelector(".three-level").appendChild(food);
+
+					//注意 掉落物的top值都是-70  但是left值需要随机   left值最小是0;最大是屏幕-掉落物
+					food.style.left =
+						Math.floor(
+							Math.random() * (document.body.clientWidth - food.offsetWidth)
+						) + "px";
+
+					//掉落物掉落  计时器动画
+					let speed = Math.ceil(Math.random() * 3);
+					const timer = setInterval(() => {
+						food.style.top = food.offsetTop + speed + "px";
+						//判断  掉落物落地 就说明没接住  就删除
+						if (
+							food.offsetTop >
+							document.body.clientHeight - food.offsetHeight
+						) {
+							document.querySelector(".three-level").removeChild(food);
+							clearInterval(timer)
+						}
+						//一边下降 一遍判断碰撞检测
+						if (this.crashFood(document.querySelector(".three-level-bottom-box"), food)) {
+							const foodIndex = Number(food.getAttribute('src').split('./images/game3-')[1]
+								.split('.')[0].split('item')[1]) - 1
+							console.log(foodIndex)
+							//排除薯条、汉堡
+							if (foodIndex !== 7 && foodIndex !== 6) {
+								this.foodInfo[foodIndex].count++
+							}
+							if (this.foodInfo.every(item => item.count >= 3)) {
+								clearInterval(this.levelTimer)
+								this.levelTimer = null
+								console.log('关卡3完成')
+								if (!this.threeRoleEnd) {
+									this.pops.success = true
+								}
+								this.threeRoleEnd = true
+								clearInterval(this.createFoodTime)
+							}
+							document.querySelector(".three-level").removeChild(
+								food); //接住掉落物 加分  直接删掉掉落物即可!
+							clearInterval(timer)
+						}
+					}, 10);
+				},
+				//封装碰撞检测的方法
+				crashFood(obj1, obj2) {
+					let box = obj1.getBoundingClientRect()
+					let food = obj2.getBoundingClientRect()
+					if (
+						(food.left + obj2.offsetWidth / 2) >= box.left &&
+						food.left <= (box.left + obj1.offsetWidth) &&
+						box.top <= (food.top + obj2.offsetWidth)
+					) {
+						return true;
+					} else {
+						return false;
+					}
+				},
+				// 打开活动规则弹窗
+				handelOpenRulesPop() {
+					this.pops.rules = true;
+				},
+				// 打开我的奖品弹窗
+				handelOpenMyPrizePop() {
+					this.pops.myprize = true;
+				},
+				// 提交用户中奖信息
+				handelSubmitUserInfo() { },
+				// 编辑我的奖品
+				handelEditPrize(id) {
+					let item = this.prize.list.filter((i) => i.id == id)[0];
+					this.pops.winning = true;
+					this.prize.cur = id - 1;
+					console.log(item);
+				},
+				showPage: function (key) {
+					if (key === this.activePage) return true;
+				},
+			},
+		});
+	</script>
+</body>
+
+</html>
