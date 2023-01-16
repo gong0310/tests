@@ -538,10 +538,6 @@
 							//这里就是放置如果用户成功的摇一摇，将要触发的事件
 							alert('ok')
 							console.log('结果=>', '111');
-							isStarted=true
-							setTimeout(() => {
-								isStarted=false
-							}, 700);
 
 							navigator.vibrate = navigator.vibrate ||
 								navigator.webkitVibrate ||
@@ -553,6 +549,10 @@
 								console.log("支持设备震动！");
 								navigator.vibrate(500) // 震动
 							}
+							isStarted=true
+							// setTimeout(() => {
+							// 	isStarted=false
+							// }, 700);
 						}
 						lastX = x;//赋值，为下一次计算做准备
 						lastY = y;//赋值，为下一次计算做准备
