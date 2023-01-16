@@ -522,6 +522,8 @@
 						y = acceleration.y;
 						if (Math.abs(x - lastX) > speed || Math.abs(y - lastY) > speed) {
 							alert('ok')
+							console.log('结果=>','111');
+							
 						}
 						lastX = x;
 						lastY = y;
@@ -529,6 +531,20 @@
 				}
 			},
 			methods: {
+				// 开始摇签
+				start() {
+					isStarted = true;
+					// $('.qiancover').hide();
+					// $('.decode').hide();
+					// $('.result').show();
+					setTimeout(showDecode, 3000);
+				},
+				// 显示正在解签
+				showDecode() {
+					// $('.result').hide();
+					// $('.decode').show();
+					setTimeout(jumpToDecode, 3000);
+				},
 				// 足球触摸事件
 				handlerTouchstartBall(e) {
 					ballX = e.targetTouches[0].pageX
