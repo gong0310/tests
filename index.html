@@ -491,9 +491,7 @@
 			},
 			mounted() {
 				this.myprize = this.prize.list; //假数据，我的奖品
-				var lastTime = 0;
-				var x = y = z = lastX = lastY = lastZ = 0;
-				var shakeSpeed = 800;
+
 				// 提前加载
 				['./images/game2-role0-1.png',
 					'./images/game2-role0-2.png',
@@ -512,9 +510,12 @@
 					this.palyBgm();
 				}, false);
 				if (window.DeviceMotionEvent) {//判断设备是否支持运动传感事件。
+					var lastTime = 0;
+					var x = y = z = lastX = lastY = lastZ = 0;
+					var shakeSpeed = 800;
 					window.addEventListener('devicemotion', shake, false);//如果支持，那么就绑定shake方法到事件上
 				} else {
-
+					alert('本设备不支持摇一摇功能')
 				}
 				function shake(eventDate) {
 					var acceleration = eventDate.accelerationIncludingGravity;//获取设备加速度信息
@@ -529,36 +530,26 @@
 						//计算 公式的意思是 单位时间内运动的路程，即为我们想要的速度
 						var speed = Math.abs(x + y + z - lastX - lastY - lastZ) / diffTime * 10000;
 						if (speed > shakeSpeed) {//如果计算出来的速度超过了阈值，那么就算作用户成功摇一摇
-							//这里就是放置如果用户成功的摇一摇，将要触发的事件，例如提示摇到了谁，摇到了多少金币等等
+							//这里就是放置如果用户成功的摇一摇，将要触发的事件
 							alert('ok')
 							console.log('结果=>', '111');
+							
+							navigator.vibrate = navigator.vibrate ||
+								navigator.webkitVibrate ||
+								navigator.mozVibrate ||
+								navigator.msVibrate;
+
+							if (navigator.vibrate) {
+								// 支持
+								console.log("支持设备震动！");
+								navigator.vibrate(2000) // 震动
+							}
 						}
 						lastX = x;//赋值，为下一次计算做准备
 						lastY = y;//赋值，为下一次计算做准备
 						lastZ = z;//赋值，为下一次计算做准备
 					}
 				}
-				//摇一摇(使用DeviceMotion事件, 推荐,应为可以计算加速度)
-				// if (window.DeviceMotionEvent) {
-				// 	var speed = 25;
-				// 	var x, y, z, lastX, lastY, lastZ;
-				// 	x = y = z = lastX = lastY = lastZ = 0;
-
-				// 	window.addEventListener('devicemotion', function (event) {
-				// 		var acceleration = event.accelerationIncludingGravity;
-				// 		x = acceleration.x;
-				// 		y = acceleration.y;
-				// 		if (Math.abs(x - lastX) > speed || Math.abs(y - lastY) > speed) {
-				// 			alert('ok')
-				// 			console.log('结果=>','111');
-
-				// 		}
-				// 		lastX = x;
-				// 		lastY = y;
-				// 	}, false);
-				// }else{
-				// 	alert('本设备不支持摇一摇功能')
-				// }
 			},
 			methods: {
 				// 开始摇签
