@@ -532,7 +532,7 @@
 						x = acceleration.x;//获取x轴数值，x轴为垂直于北轴，向东为正
 						y = acceleration.y;//获取y轴数值，y轴向正北为正
 						z = acceleration.z;//获取z轴数值，z轴垂直于地面，向上为正
-						//计算 公式的意思是 单位时间内运动的路程，即为我们想要的速度
+						//计算 公式的意思是 单位时间内运动的路程，即为我们想要的速度(灵敏度)
 						var speed = Math.abs(x + y + z - lastX - lastY - lastZ) / diffTime * 10000;
 						if (speed > shakeSpeed) {//如果计算出来的速度超过了阈值，那么就算作用户成功摇一摇
 							//这里就是放置如果用户成功的摇一摇，将要触发的事件
