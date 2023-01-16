@@ -491,7 +491,9 @@
 			},
 			mounted() {
 				this.myprize = this.prize.list; //假数据，我的奖品
-
+				var lastTime = 0;
+				var x = y = z = lastX = lastY = lastZ = 0;
+				var shakeSpeed = 800;
 				// 提前加载
 				['./images/game2-role0-1.png',
 					'./images/game2-role0-2.png',
@@ -514,7 +516,7 @@
 				} else {
 
 				}
-				function shake() {
+				function shake(eventDate) {
 					var acceleration = eventDate.accelerationIncludingGravity;//获取设备加速度信息
 					var nowTime = new Date().getTime();//记录当前时间
 					//如果这次摇的时间距离上次摇的时间有一定间隔 才执行
